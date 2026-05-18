@@ -1,0 +1,26 @@
+name: JMeter Tests
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  jmeter:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install JMeter
+        run: |
+          wget https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.6.3.tgz
+          tar -xzf apache-jmeter-5.6.3.tgz
+
+      - name: Run JMeter Test
+        run: |
+          apache-jmeter-5.6.3/bin/jmeter -n -t "Summary Report(task1).jmx" -l results.jtl
+
+      - name: Upload Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: jmeter-results
+          path: results.jtl
